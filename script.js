@@ -40,13 +40,17 @@ const generateBotResponse = async (incomingMessageDiv) => {
     if (!response.ok) throw new Error(data.error.message);
 
     // Extract and display the bot response
-    const apiResponseText = data.candidates[0].content.parts[0].text.trim();
+    const apiResponseText = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1").trim();
     messageElement.innerText = apiResponseText;
-
+    
   } catch (error) {
     console.log(error);
+    messageElement.innerText = error.message;
+    messageElement.style.color = "#ff0000";    
   } finally {
     incomingMessageDiv.classList.remove("thinking");
+    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
+
   }
 }
 
@@ -65,6 +69,7 @@ const handleOutgoingMessage = (e) => {
   outgoingMessageDiv.querySelector(".message-text").textContent =
     userData.message;
   chatBody.appendChild(outgoingMessageDiv);
+  chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
 
   // Simulate bot response with thinking indicator after a dely
   setTimeout(() => {
@@ -92,6 +97,7 @@ const handleOutgoingMessage = (e) => {
       "thinking"
     );
     chatBody.appendChild(incomingMessageDiv);
+    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
     generateBotResponse(incomingMessageDiv);
   }, 600);
 };
