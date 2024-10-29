@@ -19,7 +19,9 @@ const createMessageElement = (content, ...classes) => {
 };
 
 // Generate bot response using API
-const generateBotResponse = async () => {
+const generateBotResponse = async (incomingMessageDiv) => {
+  const messageElement = incomingMessageDiv.querySelector(".message-text");
+
   // API request options
   const requestOptions = {
     method: "POST",
@@ -37,10 +39,14 @@ const generateBotResponse = async () => {
     const data = await response.json();
     if (!response.ok) throw new Error(data.error.message);
 
-    console.log(data);
+    // Extract and display the bot response
+    const apiResponseText = data.candidates[0].content.parts[0].text.trim();
+    messageElement.innerText = apiResponseText;
 
   } catch (error) {
     console.log(error);
+  } finally {
+    incomingMessageDiv.classList.remove("thinking");
   }
 }
 
@@ -86,7 +92,7 @@ const handleOutgoingMessage = (e) => {
       "thinking"
     );
     chatBody.appendChild(incomingMessageDiv);
-    generateBotResponse();
+    generateBotResponse(incomingMessageDiv);
   }, 600);
 };
 
