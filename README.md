@@ -1,6 +1,6 @@
 # 🤖 AI Chatbot
 
-This repository, [NoureddineBou/AI-Chatbot](https://github.com/NoureddineBou/AI-Chatbot), contains the complete source code for building an AI Chatbot using HTML, CSS, and JavaScript. The project features a clean and responsive design, allowing for easy interaction with the chatbot.
+This repository contains the complete source code for building an AI Chatbot using HTML, CSS, and JavaScript. The project features a clean and responsive design, allowing for easy interaction with the chatbot.
 
 ## 📦 Get Started
 
