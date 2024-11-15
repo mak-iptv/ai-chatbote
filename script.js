@@ -11,8 +11,8 @@ const userData = {
   message: null,
   file: {
     data: null,
-    mime_type: null
-  }
+    mime_type: null,
+  },
 };
 
 // Create message element with dynamic classes and return it
@@ -32,11 +32,18 @@ const generateBotResponse = async (incomingMessageDiv) => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      contents: [{
-        parts: [{ text: userData.message }]
-      }]
-    })
-  }
+      contents: [
+        {
+          parts: [
+            { text: userData.message },
+            ...API_KEY(
+              userData.file.data ? [{ inline_data: userData.file }] : []
+            ),
+          ],
+        },
+      ],
+    }),
+  };
 
   try {
     // Fetch bot response from API
@@ -45,19 +52,19 @@ const generateBotResponse = async (incomingMessageDiv) => {
     if (!response.ok) throw new Error(data.error.message);
 
     // Extract and display the bot response
-    const apiResponseText = data.candidates[0].content.parts[0].text.replace(/\*\*(.*?)\*\*/g, "$1").trim();
+    const apiResponseText = data.candidates[0].content.parts[0].text
+      .replace(/\*\*(.*?)\*\*/g, "$1")
+      .trim();
     messageElement.innerText = apiResponseText;
-    
   } catch (error) {
     console.log(error);
     messageElement.innerText = error.message;
-    messageElement.style.color = "#ff0000";    
+    messageElement.style.color = "#ff0000";
   } finally {
     incomingMessageDiv.classList.remove("thinking");
     chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: "smooth" });
-
   }
-}
+};
 
 // Handle outgoing user messages
 const handleOutgoingMessage = (e) => {
@@ -66,7 +73,12 @@ const handleOutgoingMessage = (e) => {
   messageInput.value = "";
 
   // Create and display user message
-  const messageContent = `<div class="message-text">${userData.message}</div>`;
+  const messageContent = `<div class="message-text"></div>
+                          ${
+                            userData.file.data
+                              ? `<img src=data:${userData.file.mime_type};base64,${userData.file.data}" class="attachment" />`
+                              : ""
+                          }`;
   const outgoingMessageDiv = createMessageElement(
     messageContent,
     "user-message"
@@ -127,15 +139,16 @@ fileInput.addEventListener("change", () => {
     // Store file data in userData
     userData.file = {
       data: base64String,
-      mime_type: file.type
-    }
+      mime_type: file.type,
+    };
 
-    console.log(userData);
-
-  }
+    fileInput.value = "";
+  };
 
   reader.readAsDataURL(file);
-})
+});
 
 sendMessageButton.addEventListener("click", (e) => handleOutgoingMessage(e));
-document.querySelector("#file-upload").addEventListener("click", () => fileInput.click());
+document
+  .querySelector("#file-upload")
+  .addEventListener("click", () => fileInput.click());
