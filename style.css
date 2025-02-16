@@ -15,6 +15,30 @@ body {
   background: linear-gradient(#eeeeff, #c8c7ff);
 }
 
+#chatbot-toggler {
+  position: fixed;
+  bottom: 30px;
+  right: 35px;
+  height: 50px;
+  width: 50px;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 50%;
+  background: #5350c4;
+}
+
+#chatbot-toggler span {
+  color: #fff;
+  position: absolute;
+}
+
+#chatbot-toggler span:last-child{
+  opacity: 0;
+}
+
 .chatbot-popup {
   position: relative;
   width: 420px;
@@ -247,3 +271,18 @@ body {
   margin-top: -7px;
   border-radius: 13px 3px 13px 3px;
 }
+
+em-emoji-picker {
+  position: absolute;
+  left: 50%;
+  top: -337px;
+  width: 100%;
+  max-width: 350px;
+  max-height: 330px;
+  visibility: hidden;
+  transform: translateX(-50%);
+}
+
+ body.show-emoji-picker em-emoji-picker {
+  visibility: visible;
+ }
